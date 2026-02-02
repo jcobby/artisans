@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useApp } from "../../context/AppContext";
+import { useAppContext } from "../../context/AppContext";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -18,7 +18,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({ phone: "", password: "" });
-    const { theme, toggleTheme, notifications, toggleNotifications } = useApp();
+    const { theme, toggleTheme, notifications, toggleNotifications } = useAppContext();
     console.log("Current Theme:", theme);
     console.log("Notifications Enabled:", notifications);
 

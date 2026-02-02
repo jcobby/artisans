@@ -82,7 +82,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateUser = (userData: Partial<User>) => {
     if (user) {
       const updatedUser = { ...user, ...userData };
-      setUser(updatedUser);
+      // setUser(updatedUser);
+      setUser(updatedUser)
       // Also update AsyncStorage
       AsyncStorage.setItem("userData", JSON.stringify(updatedUser));
     }
@@ -91,6 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const value = {
     user,
     isAuthenticated: !!user,
+    // isAuisAuthenticated: false,
     isLoading,
     login,
     logout,
