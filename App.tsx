@@ -9,10 +9,10 @@ export default function App() {
   return (
     <AuthProvider>
       <AppProvider>
-        <NavigationContainer>
-          <StatusBar style="dark" />
+        {/* <NavigationContainer> */}
+          {/* <StatusBar style="dark" /> */}
           <AppNavigator />
-        </NavigationContainer>
+        {/* </NavigationContainer> */}
       </AppProvider>
     </AuthProvider>
   );

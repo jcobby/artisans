@@ -1,61 +1,62 @@
+import { Text } from "react-native";
+
 export const Title = ({
-  type,
-  textCase,
-  textColor,
+  type = "h4",
+  textCase = "",
+  textColor = "text-black",
   content,
-  customClass,
+  customClass = "",
   borderColor,
 }: any) => {
+  const sizeClass =
+    type === "h3"
+      ? "text-2xl":
+    
+    type === "h4"
+      ? "text-xl"
+      : type === "h5"
+      ? "text-base lg:text-base"
+      : "text-base";
+
   return (
-    <>
-      {type === "h4" ? (
-        <h4
-          className={`max-w-[100%] h-max lg:text-xl text-base ${textCase} text-[var(--${
-            textColor ?? "black"
-          })] py-1 ${
-            borderColor !== null && borderColor !== undefined
-              ? `border-b-4 border-[var(--${borderColor ?? "primary-blue"})]`
-              : ""
-          } font-medium tracking-[var(--letter-spacing-reg)] ${customClass}`}
-        >
-          {content}
-        </h4>
-      ) : (
-        type === "h5" && (
-          <h5
-            className={`max-w-[100%] h-max lg:text-base text-sm ${textCase} text-[var(--${
-              textColor ?? "black"
-            })] py-1 ${
-              borderColor !== null && borderColor !== undefined
-                ? `border-b-4 border-[var(--${borderColor ?? "primary-blue"})]`
-                : ""
-            } font-medium tracking-[var(--letter-spacing-reg)] ${customClass}`}
-          >
-            {content}
-          </h5>
-        )
-      )}
-    </>
+    <Text
+      className={`
+        max-w-full
+        ${sizeClass}
+        ${textCase}
+        ${textColor}
+        py-1
+        font-medium
+        ${borderColor ? `border-b-4 ${borderColor}` : ""}
+        ${customClass}
+      `}
+    >
+      {content}
+    </Text>
   );
 };
 
 
+
 export const Paragraphs = ({
-  textCase,
-  textColor,
+  textCase = "",
+  textColor = "text-black",
   children,
-  customClass,
-  borderColor,
+  customClass = "",
 }: any) => {
   return (
-    <>
-      <p
-        className={`max-w-[100%] text-sm ${textCase} text-[var(--${
-          textColor ?? "black"
-        })] py-1 font-light ${customClass}`}
-      >
-        {children}
-      </p>
-    </>
+    <Text
+      className={`
+        max-w-full
+        text-sm
+        ${textCase}
+        ${textColor}
+        py-1
+        font-light
+        ${customClass}
+      `}
+    >
+      {children}
+    </Text>
   );
 };
