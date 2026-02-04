@@ -18,8 +18,8 @@ export default function CustomerTabNavigator() {
         tabBarShowLabel: false,
 
         tabBarStyle: {
-          height: 60,
-          paddingBottom: 8,
+          height: 80,
+          paddingBottom: 15,
         },
       }}
     >
@@ -31,7 +31,7 @@ export default function CustomerTabNavigator() {
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
-              size={24}
+              size={26}
               color={focused ? Colors.primary : Colors.textSoft}
             />
           ),
@@ -46,7 +46,7 @@ export default function CustomerTabNavigator() {
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "hammer" : "hammer-outline"}
-              size={24}
+              size={26}
               color={focused ? Colors.primary : Colors.textSoft}
             />
           ),
@@ -61,7 +61,7 @@ export default function CustomerTabNavigator() {
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "chatbubble" : "chatbubble-outline"}
-              size={24}
+              size={26}
               color={focused ? Colors.primary : Colors.textSoft}
             />
           ),
@@ -76,7 +76,7 @@ export default function CustomerTabNavigator() {
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "person" : "person-outline"}
-              size={24}
+              size={26}
               color={focused ? Colors.primary : Colors.textSoft}
             />
           ),
