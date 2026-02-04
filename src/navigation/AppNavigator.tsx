@@ -17,8 +17,9 @@ const isAuthenticated = false; // Replace with actual authentication logic
 
   return (
     <NavigationContainer>
-      {!authenticated ? (
-        <AuthStack />
+      {!isAuthenticated ? (
+        <ArtisanTabNavigator />
+        // <AuthStack />
       ) : userRole === "customer" ? (
         <CustomerStack />
        ) : (
