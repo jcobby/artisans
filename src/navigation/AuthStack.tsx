@@ -6,6 +6,7 @@ import RoleSelectScreen from "../screens/auth/RoleSelectScreen";
 import CustomerRegisterScreen from "../screens/auth/CustomerRegisterScreen";
 import ArtisanRegisterScreen from "../screens/auth/ArtisanRegisterScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
+import OTPVerifyScreen from "../screens/auth/OTPVerifyScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,12 @@ export default function AuthStack() {
       <Stack.Screen
         name="ArtisanRegister"
         component={ArtisanRegisterScreen}
+      />
+
+{/* Authentication screen */}
+      <Stack.Screen
+        name="OTPVerification"
+        component={OTPVerifyScreen}
       />
 
       {/* Login */}

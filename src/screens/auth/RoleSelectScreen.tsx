@@ -16,9 +16,6 @@ export default function RoleSelectScreen({ navigation }: Props) {
   return (
     <View className="flex-1">
       <RoleSelectPage />
-
-     
     </View>
   );
 }
-
