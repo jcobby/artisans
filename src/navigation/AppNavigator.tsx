@@ -18,7 +18,8 @@ const userRole = "customer"; // Replace with actual user role logic
   return (
     <NavigationContainer>
       {!isAuthenticated ? (
-        <AuthStack />
+        <ArtisanTabNavigator />
+        // <AuthStack />
       ) : userRole === "customer" ? (
         <CustomerStack />
        ) : (
