@@ -3,6 +3,8 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import Header, { UserInfoRow } from "../../ui";
 import { useNavigation } from "@react-navigation/native";
 import { Title } from "../../typography";
+import { ButtonInstance } from "../../buttons";
+import { Colors } from "../../../theme/colors";
 
 export default function RoleSelectPage() {
   // Navigation hook
@@ -34,26 +36,53 @@ export default function RoleSelectPage() {
           exclusive offers as a Kwafters{" "}
         </Text>
 
-        <View className="w-full flex-1 flex-row">
-
-        {/* Customer Role */}
-        <TouchableOpacity
-          className="bg-white rounded-lg p-5 mb-4 items-center shadow-md w-full mr-2"
-          onPress={() => navigation.navigate("CustomerRegister")}
-        >
-         <UserInfoRow image="../../../../assets/images/logo2.png" name="Sign Up as Client"/>
-          
-        </TouchableOpacity>
-        {/* Artisan Role */}
-        <TouchableOpacity
-          className="bg-white rounded-lg p-5 flex-row items-center shadow-md w-full"
-          onPress={() => navigation.navigate("ArtisanRegister")}
-        >
-                  <UserInfoRow image="../../../../assets/images/logo2.png" name="Sign Up as Client"/>
-
-        </TouchableOpacity>
+        <View className="w-full flex-row pb-20">
+          {/* Customer Role */}
+          <TouchableOpacity
+            className="bg-white rounded-lg p-5 mb-4 items-center  mr-2 flex-1"
+            onPress={() => navigation.navigate("CustomerRegister")}
+            style={{ backgroundColor: Colors.light_i_Blue }}
+          >
+            <UserInfoRow
+              showIcon={true}
+              iconName="person"
+              iconSize={30}
+              iconBackgroundColor={Colors.light_ii_Blue}
+              iconColor={Colors.light_ii_Blue}
+              name="Sign Up as Client"
+            />
+            {/* <Text>hel world</Text> */}
+          </TouchableOpacity>
+          {/* Artisan Role */}
+          <TouchableOpacity
+            className="bg-white rounded-lg p-5 mb-4 items-center  mr-2 flex-1"
+            onPress={() => {
+              navigation.navigate("ArtisanRegister");
+              console.log("Navigate to Artisan Register");
+            }}
+            style={{ backgroundColor: Colors.cream }}
+          >
+            <UserInfoRow
+              showIcon={true}
+              iconName="hammer"
+              iconSize={30}
+              iconBackgroundColor="#FCA5A5"
+              name="Sign Up an Artisan"
+            />
+          </TouchableOpacity>
+        </View>
+        <View className=" flex-row items-center justify-center">
+          <View className="h-px flex-1 bg-black my-3 " />
+          <Text className="text-center mx-3">Or</Text>
+          <View className="h-px flex-1 bg-black" />
         </View>
 
+        <ButtonInstance
+          label="Login"
+          buttonColor="primary"
+          customClass="w-full mt-6"
+          clickEvt={() => navigation.navigate("Login")}
+        />
       </View>
     </View>
   );

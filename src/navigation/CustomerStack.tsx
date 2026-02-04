@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 /* Tabs */
-import CustomerTabNavigator from "./TabNavigator";
+import CustomerTabNavigator from "./CustomerTabNavigator";
 
 /* Customer screens (non-tab) */
 import SearchArtisanScreen from "../screens/customer/SearchArtisanScreen";
-import ArtisanProfileScreen from "../screens/customer/ArtisanProfileScreen";
+import ArtisanProfileScreen from "../screens/customer/CustomerArtisanProfileScreen";
 import RequestServiceScreen from "../screens/customer/RequestServiceScreen";
 import BookingStatusScreen from "../screens/customer/BookingStatusScreen";
 

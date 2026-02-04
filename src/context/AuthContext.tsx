@@ -19,6 +19,11 @@ interface AuthContextType {
   login: (userData: User, token: string) => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (userData: Partial<User>) => void;
+  userRole: string | null;
+  setUserRole: React.Dispatch<React.SetStateAction<string | null>>;
+  authenticated: boolean;
+  setauthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
 // Create the context
@@ -30,6 +35,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [authenticated, setauthenticated] = useState<boolean>(false);
 
   // Check if user is logged in on app start
   useEffect(() => {
@@ -97,6 +104,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     login,
     logout,
     updateUser,
+    userRole, 
+    setUserRole,
+    authenticated,
+    setauthenticated,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
