@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import CustomerHome from "../../components/pages/customers/customerHome";
+import CustomerHome from "../../components/pages/customers/Homepage/customerHome";
 
 export default function CustomerHomeScreen() {
   return (
