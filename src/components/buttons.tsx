@@ -4,6 +4,13 @@ import { Colors } from "../theme/colors";
 import { ButtonLoader } from "./loaders";
 
 
+type Props = {
+  title: string;
+  onPress: () => void;
+  loading?: boolean;
+  disabled?: boolean;
+  className?: string;
+};
 
 export const ButtonInstance = ({
   loading,
@@ -99,3 +106,34 @@ export const ButtonInstance = ({
     </TouchableOpacity>
   );
 };
+
+
+
+
+
+export function PrimaryButton({
+  title,
+  onPress,
+  loading = false,
+  disabled = false,
+  className = "",
+}: Props) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled || loading}
+      className={`bg-blue-600 rounded-xl py-3 items-center justify-center ${
+        disabled ? "opacity-50" : ""
+      } ${className}`}
+      activeOpacity={0.85}
+    >
+      {loading ? (
+        <ActivityIndicator color="#fff" />
+      ) : (
+        <Text className="text-white font-bold text-base">
+          {title}
+        </Text>
+      )}
+    </TouchableOpacity>
+  );
+}

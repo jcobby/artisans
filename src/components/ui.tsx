@@ -1,10 +1,11 @@
-import { View, Text, Image, Modal, Pressable, Switch } from "react-native";
+import { View, Text, Image, Modal, Pressable, Switch, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../theme/colors";
+import { CheckboxInput } from "./inputs";
 
-interface UserInfoRowProps {
+interface UserInfoColProps {
   image?: string;
   name: string;
   subtitle?: string;
@@ -91,7 +92,7 @@ export const IconCard = ({
   );
 };
 
-export function UserInfoRow({
+export function UserInfoCol({
   showImage,
   image,
   name,
@@ -105,7 +106,7 @@ export function UserInfoRow({
   iconBackgroundColor,
   backgroundColor = "transparent",
   iconColor,
-}: UserInfoRowProps) {
+}: UserInfoColProps) {
   return (
     <View
       className="justify-center  items-center gap-3 "
@@ -136,9 +137,121 @@ export function UserInfoRow({
       {distance && <Text className="text-xs text-gray-400">{distance}</Text>}
 
       {active && <View className="w-2 h-2 rounded-full bg-green-500" />}
+
+      
     </View>
   );
 }
+
+
+interface InfoRowProps {
+  title: string;
+  subtitle?: string;
+
+  // left side
+  imageUri?: string;
+  iconName?: keyof typeof Ionicons.glyphMap;
+  iconBgColor?: string;
+  iconColor?: string;
+  iconSize?: number;
+
+  // right side
+  selected?: boolean;
+  rightIconName?: keyof typeof Ionicons.glyphMap;
+
+  // extras
+  rating?: number;
+  distance?: string;
+
+  onPress?: () => void;
+  showDivider?: boolean;
+}
+
+export function InfoRow({
+  title,
+  subtitle,
+  imageUri,
+  iconName,
+  iconBgColor = "#E5E7EB",
+  iconColor = "#111",
+  iconSize = 20,
+  selected,
+  rightIconName,
+  rating,
+  distance,
+  onPress,
+  showDivider = true,
+}: InfoRowProps) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
+      className={`py-3 flex-row items-center ${
+        showDivider ? "border-b border-gray-200" : ""
+      }`}
+    >
+      {/* LEFT */}
+      {imageUri ? (
+        <Image
+          source={{ uri: imageUri }}
+          className="w-11 h-11 rounded-full"
+        />
+      ) : iconName ? (
+        <View
+          className="w-11 h-11 rounded-full items-center justify-center mr-3"
+          style={{ backgroundColor: iconBgColor }}
+        >
+          <Ionicons name={iconName} size={iconSize} color={iconColor} />
+        </View>
+      ) : null}
+
+      {/* CENTER */}
+      <View className="flex-1">
+        <Text className="text-base font-semibold text-gray-900">
+          {title}
+        </Text>
+
+        {subtitle && (
+          <Text className="text-sm text-gray-500 mt-0.5">
+            {subtitle}
+          </Text>
+        )}
+
+        {(rating || distance) && (
+          <View className="flex-row mt-1 gap-3">
+            {rating && (
+              <Text className="text-xs text-yellow-500">
+                ⭐ {rating}
+              </Text>
+            )}
+            {distance && (
+              <Text className="text-xs text-gray-400">
+                {distance}
+              </Text>
+            )}
+          </View>
+        )}
+      </View>
+
+      {/* RIGHT */}
+      {selected && (
+        <View className="bg-green-600 w-7 h-7 rounded-full items-center justify-center ml-2">
+          <Ionicons name="checkmark" size={16} color="#fff" />
+        </View>
+      )}
+
+      {!selected && rightIconName && (
+        <Ionicons
+          name={rightIconName}
+          size={20}
+          color="#9CA3AF"
+          style={{ marginLeft: 8 }}
+        />
+      )}
+    </TouchableOpacity>
+  );
+}
+
 
 export function ArtisanCard({ image, name, role, rating }: ArtisanCardProps) {
   return (
