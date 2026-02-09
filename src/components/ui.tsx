@@ -4,14 +4,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../theme/colors";
 
-
 interface UserInfoRowProps {
-  image: string;
+  image?: string;
   name: string;
   subtitle?: string;
   rating?: number;
   distance?: string;
   active?: boolean;
+  iconName?: string;
+  iconSize?: number;
+  showImage?: boolean;
+  showIcon?: boolean;
+  iconBackgroundColor?: string;
+  backgroundColor?: string;
+  iconColor?: string;
 }
 
 interface ConfirmModalProps {
@@ -51,6 +57,14 @@ interface ServiceBookingCardProps {
   status: "active" | "completed" | "cancelled";
 }
 
+type IconCardProps = {
+  icon: any;
+  size?: number;
+  backgroundColor?: string;
+  iconColor?: string;
+  onPress?: () => void;
+};
+
 type HeaderProps = {
   title?: string;
   showBack?: boolean;
@@ -59,25 +73,65 @@ type HeaderProps = {
   onRightPress?: () => void;
 };
 
+export const IconCard = ({
+  icon,
+  size = 26,
+  backgroundColor,
+  iconColor,
+  onPress,
+}: IconCardProps) => {
+  return (
+    <Pressable
+      onPress={onPress}
+      className={`w-16 h-16 rounded-full items-center justify-center  active:opacity-70`}
+      style={{ backgroundColor }}
+    >
+      <Ionicons name={icon} size={size} color={iconColor} />
+    </Pressable>
+  );
+};
+
 export function UserInfoRow({
+  showImage,
   image,
   name,
   subtitle,
   rating,
   distance,
   active,
+  iconName,
+  iconSize,
+  showIcon,
+  iconBackgroundColor,
+  backgroundColor = "transparent",
+  iconColor,
 }: UserInfoRowProps) {
   return (
-    <View className="flex-row items-center gap-3">
-      <Image source={{ uri: image }} className="w-11 h-11 rounded-full" />
+    <View
+      className="justify-center  items-center gap-3 "
+      style={{ backgroundColor }}
+    >
+      {showImage && (
+        <Image source={{ uri: image }} className="w-11 h-11 rounded-full" />
+      )}
 
-      <View className="flex-1">
-        <Text className="font-semibold text-sm text-gray-900">{name}</Text>
+      {showIcon && (
+        <View pointerEvents="none">
+          <IconCard
+            icon={iconName}
+            size={iconSize}
+            backgroundColor={iconBackgroundColor}
+          />
+        </View>
+      )}
 
-        {subtitle && <Text className="text-xs text-gray-500">{subtitle}</Text>}
+      <Text className="font-semibold text-sm text-gray-900 text-center">
+        {name}
+      </Text>
 
-        {rating && <Text className="text-xs text-yellow-500">⭐ {rating}</Text>}
-      </View>
+      {subtitle && <Text className="text-xs text-gray-500">{subtitle}</Text>}
+
+      {rating && <Text className="text-xs text-yellow-500">⭐ {rating}</Text>}
 
       {distance && <Text className="text-xs text-gray-400">{distance}</Text>}
 
@@ -199,9 +253,6 @@ export function ConfirmModal({
   );
 }
 
-
-
-
 export default function Header({
   title,
   showBack = false,
@@ -215,7 +266,6 @@ export default function Header({
   return (
     <View style={{ paddingTop: insets.top }} className="">
       <View className="flex-row items-center justify-between px-4 py-3">
-
         {/* LEFT — BACK */}
         {showBack ? (
           <Pressable
@@ -224,19 +274,14 @@ export default function Header({
             hitSlop={10}
           >
             <Ionicons name="chevron-back" size={22} color="#8B5E3C" />
-            <Text className="text-[16px] font-medium ">
-              Back
-            </Text>
+            <Text className="text-[16px] font-medium ">Back</Text>
           </Pressable>
         ) : (
           <View className="w-[60px]" />
         )}
 
         {/* CENTER — TITLE */}
-        <Text
-          numberOfLines={1}
-          className="text-[18px] font-semibold "
-        >
+        <Text numberOfLines={1} className="text-[18px] font-semibold ">
           {title}
         </Text>
 
@@ -248,21 +293,15 @@ export default function Header({
             hitSlop={10}
           >
             {rightLabel && (
-              <Text className="text-[15px] font-medium ">
-                {rightLabel}
-              </Text>
+              <Text className="text-[15px] font-medium ">{rightLabel}</Text>
             )}
 
-            {rightIcon && (
-              <Ionicons name={rightIcon} size={18}  />
-            )}
+            {rightIcon && <Ionicons name={rightIcon} size={18} />}
           </Pressable>
         ) : (
           <View className="w-[60px]" />
         )}
-
       </View>
     </View>
   );
 }
-
