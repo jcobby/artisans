@@ -5,6 +5,7 @@ import CustomerStack from "./CustomerStack";
 import ArtisanTabNavigator from "./ArtisanTabNavigator";
 import { useAppContext } from "../context/AppContext";
 import { useAuth } from "../context/AuthContext";
+import CustomerTabNavigator from "./CustomerTabNavigator";
 
 export default function AppNavigator() {
   const {  } = useAppContext();
@@ -20,7 +21,7 @@ const isAuthenticated = false; // Replace with actual authentication logic
       {!authenticated ? (
         <AuthStack />
       ) : userRole === "customer" ? (
-        <CustomerStack />
+        <CustomerTabNavigator />
        ) : (
         <ArtisanTabNavigator />
       )} 

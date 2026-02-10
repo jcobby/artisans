@@ -41,9 +41,6 @@ export default function OTPVerifyScreen() {
           clickEvt={() => {
             setUserRole("customer");
             setauthenticated(true);
-            navigation.navigate("CustomerTabs", {
-              screen: "Home",
-            });
           }}
         />
       </View>

@@ -31,9 +31,8 @@ export default function CustomerHome() {
   ];
 
   return (
-    <View>
-      hello worlddd
-      <CustomModal
+    <View className="flex-1">
+      {/* <CustomModal
         closeModal={() => {}}
         showModal={false}
         size="full"
@@ -49,7 +48,7 @@ export default function CustomerHome() {
           placeholder="Enter a new address"
         />
 
-        {/* Choose on map */}
+
         <InfoRow
           iconName="map-outline"
           iconBgColor="#DCFCE7"
@@ -58,7 +57,7 @@ export default function CustomerHome() {
           onPress={() => console.log("Open map")}
         />
 
-        {/* Address List */}
+
         <View className="mt-2">
           {addresses.map((item) => (
             <InfoRow
@@ -72,7 +71,7 @@ export default function CustomerHome() {
           ))}
         </View>
       </CustomModal>
-      {/* <CustomModal
+      <CustomModal
         closeModal={() => {}}
         showModal={true}
         size="full"
@@ -81,6 +80,7 @@ export default function CustomerHome() {
       >
         <MapPicker onSelectLocation={(coords) => console.log(coords)} />
       </CustomModal> */}
+       <MapPicker onSelectLocation={(coords) => console.log(coords)} />
     </View>
   );
 }
