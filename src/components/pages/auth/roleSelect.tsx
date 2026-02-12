@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import Header, { UserInfoRow } from "../../ui";
+import Header, { UserInfoCol } from "../../ui";
 import { useNavigation } from "@react-navigation/native";
 import { Title } from "../../typography";
 import { ButtonInstance } from "../../buttons";
@@ -43,7 +43,7 @@ export default function RoleSelectPage() {
             onPress={() => navigation.navigate("CustomerRegister")}
             style={{ backgroundColor: Colors.light_i_Blue }}
           >
-            <UserInfoRow
+            <UserInfoCol
               showIcon={true}
               iconName="person"
               iconSize={30}
@@ -62,7 +62,7 @@ export default function RoleSelectPage() {
             }}
             style={{ backgroundColor: Colors.cream }}
           >
-            <UserInfoRow
+            <UserInfoCol
               showIcon={true}
               iconName="hammer"
               iconSize={30}
