@@ -1,4 +1,13 @@
-import { View, Text, Image, Modal, Pressable, Switch, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Modal,
+  Pressable,
+  Switch,
+  TouchableOpacity,
+  ImageSourcePropType,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -30,10 +39,22 @@ interface ConfirmModalProps {
 }
 
 interface ArtisanCardProps {
-  image: string;
+  image: ImageSourcePropType;
   name: string;
   role: string;
   rating: number;
+  id?: string;
+  onPress?: () => void;
+}
+
+interface ArtisanListRowProps {
+  name: string;
+  role: string;
+  imageUri: ImageSourcePropType;
+  rating: number;
+  distance: string;
+  onPress?: () => void;
+  showDivider?: boolean;
 }
 
 interface ChatPreviewProps {
@@ -137,12 +158,9 @@ export function UserInfoCol({
       {distance && <Text className="text-xs text-gray-400">{distance}</Text>}
 
       {active && <View className="w-2 h-2 rounded-full bg-green-500" />}
-
-      
     </View>
   );
 }
-
 
 interface InfoRowProps {
   title: string;
@@ -192,10 +210,7 @@ export function InfoRow({
     >
       {/* LEFT */}
       {imageUri ? (
-        <Image
-          source={{ uri: imageUri }}
-          className="w-11 h-11 rounded-full"
-        />
+        <Image source={{ uri: imageUri }} className="w-11 h-11 rounded-full" />
       ) : iconName ? (
         <View
           className="w-11 h-11 rounded-full items-center justify-center mr-3"
@@ -207,27 +222,19 @@ export function InfoRow({
 
       {/* CENTER */}
       <View className="flex-1">
-        <Text className="text-base font-semibold text-gray-900">
-          {title}
-        </Text>
+        <Text className="text-base font-semibold text-gray-900">{title}</Text>
 
         {subtitle && (
-          <Text className="text-sm text-gray-500 mt-0.5">
-            {subtitle}
-          </Text>
+          <Text className="text-sm text-gray-500 mt-0.5">{subtitle}</Text>
         )}
 
         {(rating || distance) && (
           <View className="flex-row mt-1 gap-3">
             {rating && (
-              <Text className="text-xs text-yellow-500">
-                ⭐ {rating}
-              </Text>
+              <Text className="text-xs text-yellow-500">⭐ {rating}</Text>
             )}
             {distance && (
-              <Text className="text-xs text-gray-400">
-                {distance}
-              </Text>
+              <Text className="text-xs text-gray-400">{distance}</Text>
             )}
           </View>
         )}
@@ -252,18 +259,95 @@ export function InfoRow({
   );
 }
 
-
-export function ArtisanCard({ image, name, role, rating }: ArtisanCardProps) {
+export function ArtisanCard({
+  image,
+  name,
+  role,
+  rating,
+  id,
+  onPress,
+}: ArtisanCardProps) {
   return (
-    <View className="bg-gray-100 rounded-xl p-4 items-center">
-      <Image source={{ uri: image }} className="w-16 h-16 rounded-full" />
+    <TouchableOpacity
+      className="bg-white rounded-lg p-5 items-center mr-3 w-"
+      id={id}
+      onPress={onPress}
+      style={{ backgroundColor: Colors.light_i_Blue }}
+    >
+      <View
+        className="justify-center  items-center gap-2"
+        style={{ backgroundColor: Colors.light_i_Blue }}
+      >
+        <Image
+          source={image}
+          style={{ width: 64, height: 64, borderRadius: 32 }}
+          resizeMode="cover"
+        />
+        <Text className="mt-2 font-semibold text-gray-900">{name}</Text>
 
-      <Text className="mt-2 font-semibold text-gray-900">{name}</Text>
+        <Text className="text-xs text-gray-500">{role}</Text>
 
-      <Text className="text-xs text-gray-500">{role}</Text>
+        <View className="flex-row mt-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Ionicons
+              key={star}
+              name={star <= rating ? "star" : "star-outline"}
+              size={16}
+              color="#facc15"
+            />
+          ))}
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
 
-      <Text className="mt-1 text-yellow-500 text-sm">⭐ {rating}</Text>
-    </View>
+export function ArtisanListRow({
+  name,
+  role,
+  imageUri,
+  rating,
+  distance,
+  onPress,
+  showDivider = true,
+}: ArtisanListRowProps) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
+      className={`flex-row items-center py-4 ${
+        showDivider ? "border-b border-gray-200" : ""
+      }`}
+    >
+      {/* LEFT - Avatar */}
+      <Image
+        source={imageUri}
+        style={{ width: 64, height: 64, borderRadius: 32 }}
+        resizeMode="cover"
+      />
+
+      {/* MIDDLE - Name & Role */}
+      <View className="flex-1 px-4">
+        <Text className="text-base font-semibold text-gray-900">{name}</Text>
+        <Text className="text-sm text-gray-500 mt-0.5">{role}</Text>
+      </View>
+
+      {/* RIGHT - Distance & Rating */}
+      <View className="items-end">
+        <Text className="text-sm text-gray-500 mb-1">{distance}</Text>
+
+        <View className="flex-row">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Ionicons
+              key={star}
+              name={star <= rating ? "star" : "star-outline"}
+              size={14}
+              color="#facc15"
+            />
+          ))}
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 }
 
@@ -363,6 +447,41 @@ export function ConfirmModal({
         </View>
       </View>
     </Modal>
+  );
+}
+
+export function StatItem({ value, label }: { value: string; label: string }) {
+  return (
+    <View className="items-center">
+      <Text className="text-lg font-semibold">{value}</Text>
+      <Text className="text-gray-500 text-xs mt-1">{label}</Text>
+    </View>
+  );
+}
+
+export function ReviewCard({ source }: any) {
+  return (
+    <View className="bg-gray-100 w-64 p-4 rounded-xl mr-4">
+      <View className="flex-row items-center mb-2">
+        <Image
+          source={source}
+          style={{ width: 64, height: 64, borderRadius: 32 }}
+          resizeMode="cover"
+        />
+        <Text className="font-medium">Shalom Grace</Text>
+      </View>
+
+      <Text className="text-gray-600 text-xs mb-3">
+        He is an outstanding artisan with speed in delivery of his quality
+        service. Kind and hardworking man.
+      </Text>
+
+      <View className="flex-row">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Ionicons key={star} name="star" size={14} color="#facc15" />
+        ))}
+      </View>
+    </View>
   );
 }
 

@@ -1,18 +1,22 @@
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
 import {
-  Modal,
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   Dimensions,
-} from 'react-native';
+  Platform,
+  Button,
+  Modal,
+  StyleSheet,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface CustomModalProps {
   closeModal: () => void;
   children: React.ReactNode;
-  showModal: boolean;
+  showModal?: boolean;
   modalStyles?: string;
   hasChildrenModals?: boolean;
   childModalStyles?: string;
@@ -22,7 +26,9 @@ interface CustomModalProps {
   modalTitle?: string;
   modalIcon?: React.ReactNode;
   customModalBg?: string;
-  size?: 'small' | 'medium' | 'large' | 'full';
+  visible?: boolean;
+  setVisible?: any;
+  size?: "small" | "medium" | "large" | "full";
 }
 
 interface ChildModalProps {
@@ -32,124 +38,129 @@ interface ChildModalProps {
   nestedChildren?: React.ReactNode;
 }
 
-const ChildModal = ({
-  childModalStyles,
-  showChildModal,
-  closeChildModal,
-  nestedChildren,
-}: ChildModalProps) => {
-  return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={showChildModal}
-      onRequestClose={closeChildModal}
-    >
-      <View className="flex-1 justify-center items-center bg-black/70">
-        <View className={`bg-white rounded-2xl p-5 w-4/5 max-h-4/5 ${childModalStyles}`}>
-          <TouchableOpacity
-            className="self-end bg-blue-500 rounded-full p-1.5 mb-2"
-            onPress={closeChildModal}
-          >
-            <Ionicons name="close" size={20} color="#fff" />
-          </TouchableOpacity>
-          {nestedChildren}
-        </View>
-      </View>
-    </Modal>
-  );
-};
+// const ChildModal = ({
+//   childModalStyles,
+//   showChildModal,
+//   closeChildModal,
+//   nestedChildren,
+// }: ChildModalProps) => {
+//   return (
+//     <Modal
+//       animationType="fade"
+//       transparent={true}
+//       visible={showChildModal}
+//       onRequestClose={closeChildModal}
+//     >
+//       <View className="flex-1 justify-center items-center bg-black/70">
+//         <View
+//           className={`bg-white rounded-2xl p-5 w-4/5 max-h-4/5 ${childModalStyles}`}
+//         >
+//           <TouchableOpacity
+//             className="self-end bg-blue-500 rounded-full p-1.5 mb-2"
+//             onPress={closeChildModal}
+//           >
+//             <Ionicons name="close" size={20} color="#fff" />
+//           </TouchableOpacity>
+//           {nestedChildren}
+//         </View>
+//       </View>
+//     </Modal>
+//   );
+// };
 
 export default function CustomModal({
-  closeModal,
+  visible,
+  setVisible,
   children,
-  showModal,
-  modalStyles,
-  hasChildrenModals,
-  childModalStyles,
-  showChildModal,
-  closeChildModal,
-  nestedChildren,
   modalTitle,
-  modalIcon,
-  customModalBg,
-  size = 'medium',
+  size = "medium",
 }: CustomModalProps) {
-  const getSizeClass = () => {
-    const screenWidth = Dimensions.get('window').width;
-    const isTablet = screenWidth > 768;
-    
+  const screenWidth = Dimensions.get("window").width;
+  const isTablet = screenWidth > 768;
+
+  const isFull = size === "full";
+
+  const getWidth = () => {
     switch (size) {
-      case 'small':
-        return isTablet ? 'w-2/5' : 'w-11/12';
-      case 'medium':
-        return isTablet ? 'w-3/5' : 'w-11/12';
-      case 'large':
-        return isTablet ? 'w-4/5' : 'w-[95%]';
-      case 'full':
-        return 'w-full';
+      case "small":
+        return isTablet ? "40%" : "90%";
+      case "medium":
+        return isTablet ? "60%" : "90%";
+      case "large":
+        return isTablet ? "80%" : "95%";
+      case "full":
+        return "100%";
       default:
-        return isTablet ? 'w-3/5' : 'w-11/12';
+        return "90%";
     }
   };
 
   return (
     <Modal
+      visible={visible}
+      transparent
       animationType="fade"
-      transparent={true}
-      visible={showModal}
-      onRequestClose={closeModal}
-      aria-labelledby={`parent-modal-${modalTitle ?? "info-modal"}`}
-      statusBarTranslucent
-
+      onRequestClose={() => setVisible(false)}
     >
-      <View className="flex-1 justify-center items-center bg-black/50">
-        <View
-          className={`rounded-2xl p-5  shadow-lg ${getSizeClass()} ${
-            customModalBg ? '' : 'bg-white'
-          } ${modalStyles}`}
-          style={customModalBg ? { backgroundColor: customModalBg } : {}}
-        >
+      <View style={[styles.overlay, isFull && styles.overlayFull]}>
+        <View style={[styles.modalBox, { width: getWidth() }]}>
           {/* Header */}
-          <View className="flex-row justify-between items-center mb-4">
-            <View className="flex-row items-center flex-1">
-              {modalIcon && <View className="mr-2">{modalIcon}</View>}
-              {modalTitle && (
-                <Text className="text-lg md:text-xl font-black text-black">
-                  {modalTitle}
-                </Text>
-              )}
+          {modalTitle && (
+            <View style={styles.header}>
+              <Text style={styles.title}>{modalTitle}</Text>
+
+              <TouchableOpacity onPress={() => setVisible(false)}>
+                <Text style={styles.close}>✕</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              className="bg-blue-500 rounded-full py-1.5 px-2"
-              onPress={closeModal}
-              accessibilityLabel="Close modal"
-              accessibilityRole="button"
-            >
-              <Ionicons name="close" size={20} color="#fff" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Content */}
-          <ScrollView
-            className="w-full -mt-1 py-2"
-            showsVerticalScrollIndicator={false}
-            bounces={false}
-          >
-            {children}
-          </ScrollView>
-
-          {/* Child Modal */}
-          {hasChildrenModals && (
-            <ChildModal
-              childModalStyles={childModalStyles}
-              showChildModal={showChildModal}
-              closeChildModal={closeChildModal}
-              nestedChildren={nestedChildren}
-            />
           )}
+
+          {/* Body */}
+          <View style={styles.body}>{children}</View>
         </View>
       </View>
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center", // default for non-full modals
+        alignItems: "center",
+
+  },
+
+  overlayFull: {
+    justifyContent: "flex-start", // full modal starts from top
+  },
+
+  modalBox: {
+    height: "75%", // 👈 KEY FIX
+    width: "100%",
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+  },
+
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+
+  title: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
+
+  close: {
+    fontSize: 22,
+  },
+  body: {
+    flex: 1,
+  },
+});

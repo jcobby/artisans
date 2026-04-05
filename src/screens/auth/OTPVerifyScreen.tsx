@@ -3,15 +3,49 @@ import { Text, View } from "react-native";
 import { Title } from "../../components/typography";
 import { OtpInput } from "../../components/inputs";
 import { ButtonInstance } from "../../components/buttons";
-import { useAuth } from "../../context/AuthContext";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Colors } from "../../theme/colors";
+import { useMutation } from "@tanstack/react-query";
+import { verifyOtp } from "../../../hooks/auth.hooks";
+
+type OTPRouteParams = {
+  role?: "customer" | "artisan";
+  phone?: string;
+};
 
 export default function OTPVerifyScreen() {
   const navigation = useNavigation<any>();
+  const route = useRoute();
 
   const [otp, setOtp] = React.useState("");
-  const { userRole, setUserRole, authenticated, setauthenticated } = useAuth();
+
+  const params = (route.params || {}) as OTPRouteParams;
+  const effectiveRole: "customer" | "artisan" = params.role || "customer";
+
+  const mutation = useMutation({
+    mutationFn: verifyOtp,
+    onSuccess: () => {
+      // After a successful OTP verification, redirect to login.
+      navigation.navigate("Login");
+    },
+  });
+
+  const handleSubmit = () => {
+    const phone = params.phone;
+
+    if (!phone) {
+      console.log("Missing phone number for OTP verification.");
+      return;
+    }
+
+    // Require full 6-digit OTP as per backend contract.
+    if (!otp || otp.length < 6) {
+      // Simple guard; you could surface validation UI here later.
+      return;
+    }
+
+    mutation.mutate({ phone, otp });
+  };
 
   return (
     <View className="flex-1">
@@ -26,7 +60,7 @@ export default function OTPVerifyScreen() {
           verify your account.
         </Text>
 
-        <OtpInput length={4} onChangeOTP={setOtp} />
+        <OtpInput length={6} onChangeOTP={setOtp} />
         {/* resend code */}
         <Text
           className="text-center mt- text-blue-500"
@@ -38,10 +72,7 @@ export default function OTPVerifyScreen() {
           label="Submit"
           buttonColor="primary"
           customClass="w-full mt-6"
-          clickEvt={() => {
-            setUserRole("customer");
-            setauthenticated(true);
-          }}
+          clickEvt={handleSubmit}
         />
       </View>
     </View>

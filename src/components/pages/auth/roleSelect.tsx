@@ -32,8 +32,8 @@ export default function RoleSelectPage() {
         <Title type="h3" content="Sign up" />
 
         <Text className="text-gray-600 mt-2 mb-6">
-          Sign up to get premium service from Kwafters at a low rate and enjoy
-          exclusive offers as a Kwafters{" "}
+          Sign up to get premium service from Artisans at a low rate and enjoy
+          exclusive offers as an Artisans{" "}
         </Text>
 
         <View className="w-full flex-row pb-20">

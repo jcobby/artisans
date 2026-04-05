@@ -50,6 +50,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (token && userData) {
         setUser(JSON.parse(userData));
+        // if a user is stored, consider them authenticated for now
+        setauthenticated(true);
       }
     } catch (error) {
       console.error("Error checking login status:", error);
@@ -63,9 +65,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Save to AsyncStorage
       await AsyncStorage.setItem("authToken", token);
       await AsyncStorage.setItem("userData", JSON.stringify(userData));
+      await AsyncStorage.setItem("userRole", userData.role);
 
       // Update state
       setUser(userData);
+      setUserRole(userData.role);
+      setauthenticated(true);
     } catch (error) {
       console.error("Error saving login data:", error);
       throw error;
@@ -77,9 +82,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Remove from AsyncStorage
       await AsyncStorage.removeItem("authToken");
       await AsyncStorage.removeItem("userData");
+       await AsyncStorage.removeItem("userRole");
 
       // Update state
       setUser(null);
+      setUserRole(null);
+      setauthenticated(false);
     } catch (error) {
       console.error("Error during logout:", error);
       throw error;
@@ -88,13 +96,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateUser = (userData: Partial<User>) => {
     if (user) {
-      const updatedUser = { ...user, ...userData };
-      // setUser(updatedUser);
-      setUser(updatedUser)
-      // Also update AsyncStorage
+      const updatedUser: User = { ...user, ...userData };
+      setUser(updatedUser);
+      // Also update AsyncStorage (no need to await here)
       AsyncStorage.setItem("userData", JSON.stringify(updatedUser));
     }
   };
+
+  // Restore role / authenticated flag from storage on app start
+  useEffect(() => {
+    const restoreSession = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        const role = await AsyncStorage.getItem("userRole");
+
+        if (token && role) {
+          setUserRole(role);
+          setauthenticated(true);
+        }
+      } catch (error) {
+        console.error("Error restoring auth session:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    restoreSession();
+  }, []);
+
+  // Persist role / authenticated whenever they change so navigation can recover on relaunch
+  useEffect(() => {
+    const persistAuthFlags = async () => {
+      try {
+        if (authenticated && userRole) {
+          await AsyncStorage.setItem("userRole", userRole);
+        } else {
+          await AsyncStorage.removeItem("userRole");
+        }
+      } catch (error) {
+        console.error("Error persisting auth flags:", error);
+      }
+    };
+
+    persistAuthFlags();
+  }, [authenticated, userRole]);
 
   const value = {
     user,

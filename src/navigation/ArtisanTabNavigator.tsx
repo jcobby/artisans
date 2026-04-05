@@ -6,38 +6,84 @@ import ArtisanHomeScreen from "../screens/artisan/ArtisanHomeScreen";
 // import ArtisanJobsScreen from "../screens/artisan/ArtisanJobsScreen";
 // import ArtisanWalletScreen from "../screens/artisan/ArtisanWalletScreen";
 import ArtisanProfileScreen from "../screens/artisan/ArtisanProfileScreen";
+import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../theme/colors";
+import ArtisanChatsTabScreen from "../screens/artisan/ArtisanChatsTabScreen";
 
 const Tab = createBottomTabNavigator();
 
 export default function ArtisanTabNavigator() {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName: any;
+        tabBarShowLabel: false,
 
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Jobs") {
-            iconName = focused ? "briefcase" : "briefcase-outline";
-          } else if (route.name === "Wallet") {
-            iconName = focused ? "wallet" : "wallet-outline";
-          } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline";
-          }
-
-          return null;
-        //   <Ionicons name={iconName} size={size} color={color} />;
+        tabBarStyle: {
+          height: 80,
+          paddingBottom: 15,
         },
-        tabBarActiveTintColor: "#2563eb",
-        tabBarInactiveTintColor: "gray",
-      })}
+      }}
     >
-      <Tab.Screen name="Home" component={ArtisanHomeScreen} />
-      {/* <Tab.Screen name="Jobs" component={ArtisanJobsScreen} />
-      <Tab.Screen name="Wallet" component={ArtisanWalletScreen} /> */}
-      <Tab.Screen name="Profile" component={ArtisanProfileScreen} />
+      {/* Home */}
+      <Tab.Screen
+        name="Home"
+        component={ArtisanHomeScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? "home" : "home-outline"}
+              size={26}
+              color={focused ? Colors.primary : Colors.textSoft}
+            />
+          ),
+        }}
+      />
+
+      {/* Bookings */}
+      {/* <Tab.Screen
+           name="Bookings"
+           component={CustomerBookingsScreen}
+           options={{
+             tabBarIcon: ({ focused }) => (
+               <Ionicons
+                 name={focused ? "hammer" : "hammer-outline"}
+                 size={26}
+                 color={focused ? Colors.primary : Colors.textSoft}
+               />
+             ),
+           }}
+         /> */}
+
+      {/* Chat */}
+      <Tab.Screen
+        name="Chat"
+        component={ArtisanChatsTabScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? "chatbubble" : "chatbubble-outline"}
+              size={26}
+              color={focused ? Colors.primary : Colors.textSoft}
+            />
+          ),
+        }}
+      />
+
+      {/* Profile */}
+      <Tab.Screen
+        name="Profile"
+        component={ArtisanProfileScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              size={26}
+              color={focused ? Colors.primary : Colors.textSoft}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 }

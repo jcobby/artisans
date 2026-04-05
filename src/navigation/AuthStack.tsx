@@ -7,6 +7,7 @@ import CustomerRegisterScreen from "../screens/auth/CustomerRegisterScreen";
 import ArtisanRegisterScreen from "../screens/auth/ArtisanRegisterScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import OTPVerifyScreen from "../screens/auth/OTPVerifyScreen";
+import SignupCompleteScreen from "../screens/auth/SignupCompleteScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,10 +40,10 @@ export default function AuthStack() {
       />
 
 {/* Authentication screen */}
-      <Stack.Screen
-        name="OTPVerification"
-        component={OTPVerifyScreen}
-      />
+      <Stack.Screen name="OTPVerification" component={OTPVerifyScreen} />
+
+      {/* Post-signup confirmation */}
+      <Stack.Screen name="SignupComplete" component={SignupCompleteScreen} />
 
       {/* Login */}
       <Stack.Screen

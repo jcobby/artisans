@@ -1,12 +1,55 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+} from "react-native";
 import { IInputProps, ILabelProps } from "../../interfaces/IElements";
 import { RequiredMarker, TooltipInstance } from "./misc";
 import { useState, useRef } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
+interface SelectInputProps {
+  label?: string;
+  value: string;
+  options: SelectOption[];
+  placeholder?: string;
+  onChange: (val: string) => void;
+  requiredMarker?: boolean;
+}
+
 type Props = {
   length?: number;
   onChangeOTP?: (code: string) => void;
+};
+
+export const CheckboxInputg = ({ label, value, onValueChange }: any) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => onValueChange(!value)}
+      className="flex-row items-start gap-3 mb-4"
+    >
+      <View
+        className={`w-5 h-5 rounded border items-center justify-center ${
+          value ? "bg-green-700 border-green-700" : "bg-white border-gray-400"
+        }`}
+      >
+        {value && <Ionicons name="checkmark" size={14} color="white" />}
+      </View>
+
+      <View className="flex-1">
+        <Text className="text-[13px] leading-5 text-gray-700">{label}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 };
 
 interface SearchInputProps {
@@ -15,6 +58,7 @@ interface SearchInputProps {
   placeholder?: string;
   onSubmit?: () => void;
   className?: string;
+  onFocus?: () => void;
 }
 
 export const LabelInstance = ({
@@ -50,48 +94,67 @@ export const LabelInstance = ({
   );
 };
 
+interface AltRegularInputProps {
+  value?: string;
+  onChangeVal: (text: string) => void;
+  onBlur?: () => void;
+  placeholder?: string;
+  label?: string;
+  iconName?: keyof typeof Ionicons.glyphMap;
+  isPassword?: boolean;
+  error?: string;
+}
+
 export const AltRegularInput = ({
-  value,
+  value = "",
   onChangeVal,
+  onBlur,
   placeholder,
   label,
-  iconName, // Pass the string name for Ionicons (e.g., "person-outline")
+  iconName,
   isPassword = false,
-}: any) => {
+  error,
+}: AltRegularInputProps) => {
   const [secure, setSecure] = useState(isPassword);
 
   return (
-    <View className="mb-4 flex flex-col gap-1.5 " style={{ width: "100%" }}>
-      {/* Label Component */}
-      <LabelInstance
-        label={label}
-        customLabelClass="text-[13px] text-gray-700 font-medium"
-      />
+    <View className="mb-4 w-full">
+      {/* Label */}
+      {label && (
+        <Text className="text-[13px] text-gray-700 font-medium mb-1">
+          {label}
+        </Text>
+      )}
 
       {/* Input Container */}
-      <View className="flex-row items-center border border-black rounded-lg px-3 bg-white h-12">
-        {/* Left Icon using Ionicons */}
+      <View
+        className={`flex-row items-center rounded-lg px-3 bg-white h-12 border ${
+          error ? "border-red-500" : "border-gray-300"
+        }`}
+      >
+        {/* Left Icon */}
         {iconName && (
           <View className="mr-2">
             <Ionicons name={iconName} size={20} color="#9CA3AF" />
           </View>
         )}
 
-        {/* Input Field */}
+        {/* Input */}
         <TextInput
           className="flex-1 text-[15px] text-black h-full"
           placeholder={placeholder}
           value={value}
           onChangeText={onChangeVal}
+          onBlur={onBlur}
           placeholderTextColor="#9CA3AF"
           secureTextEntry={secure}
           autoCapitalize="none"
         />
 
-        {/* Password Eye Toggle */}
+        {/* Password Toggle */}
         {isPassword && (
           <TouchableOpacity
-            onPress={() => setSecure(!secure)}
+            onPress={() => setSecure((prev) => !prev)}
             className="ml-2 p-1"
           >
             <Ionicons
@@ -102,6 +165,9 @@ export const AltRegularInput = ({
           </TouchableOpacity>
         )}
       </View>
+
+      {/* Error Message */}
+      {error && <Text className="text-red-500 text-xs mt-1">{error}</Text>}
     </View>
   );
 };
@@ -111,7 +177,7 @@ export const CheckboxInput = ({ label, value, onValueChange }: any) => {
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => onValueChange(!value)}
-      className="flex-row items-start gap-3 mb-4 flex-1"
+      className="flex-row items-start gap-3 mb-4 "
     >
       {/* Checkbox Square */}
       <View
@@ -123,8 +189,8 @@ export const CheckboxInput = ({ label, value, onValueChange }: any) => {
       </View>
 
       {/* Label/Text Section */}
-      <View className="flex-1">
-        <Text className="text-[13px] leading-5 text-gray-700">{label}</Text>
+      <View className="">
+        <Text className="text-[13px] leading-5 text-">{label}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -188,10 +254,11 @@ export default function SearchInput({
   placeholder = "Search...",
   onSubmit,
   className = "",
+  onFocus,
 }: SearchInputProps) {
   return (
     <View
-      className={`flex-row items-center bg-gray-100 rounded-xl px-3 py-2 ${className}`}
+      className={`flex-row items-center border  bg-gray-100 rounded-xl px-3 py-2 ${className}`}
     >
       {/* Search Icon */}
       <Ionicons name="search" size={20} color="#666" />
@@ -204,6 +271,7 @@ export default function SearchInput({
         className="flex-1 ml-2 text-base"
         returnKeyType="search"
         onSubmitEditing={onSubmit}
+        onFocus={onFocus}
       />
 
       {/* Clear Button */}
@@ -215,3 +283,69 @@ export default function SearchInput({
     </View>
   );
 }
+
+export const SelectInput = ({
+  label,
+  value,
+  options,
+  placeholder = "Select option",
+  onChange,
+  requiredMarker = false,
+}: SelectInputProps) => {
+  const [visible, setVisible] = useState(false);
+
+  const selected = options.find((opt) => opt.value === value);
+
+  return (
+    <View className="mb-4 flex flex-col gap-1.5">
+      {label && (
+        <LabelInstance
+          label={label}
+          requiredMarker={requiredMarker}
+          customLabelClass="text-[13px] text-gray-700 font-medium"
+        />
+      )}
+
+      {/* Select Box */}
+      <TouchableOpacity
+        onPress={() => setVisible(true)}
+        className="flex-row items-center justify-between border border-black rounded-lg px-3 bg-white h-12"
+      >
+        <Text
+          className={`text-[15px] ${selected ? "text-black" : "text-gray-400"}`}
+        >
+          {selected ? selected.label : placeholder}
+        </Text>
+
+        <Ionicons name="chevron-down" size={20} color="#9CA3AF" />
+      </TouchableOpacity>
+
+      {/* Modal Dropdown */}
+      <Modal visible={visible} transparent animationType="fade">
+        <TouchableOpacity
+          className="flex-1 bg-black/30 justify-center px-6"
+          activeOpacity={1}
+          onPress={() => setVisible(false)}
+        >
+          <View className="bg-white rounded-xl p-4">
+            <FlatList
+              data={options}
+              keyExtractor={(item) => item.value}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  className="py-3 border-b border-gray-200"
+                  onPress={() => {
+                    onChange(item.value);
+                    setVisible(false);
+                  }}
+                >
+                  <Text className="text-base text-black">{item.label}</Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </View>
+  );
+};

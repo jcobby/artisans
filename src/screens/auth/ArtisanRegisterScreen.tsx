@@ -1,12 +1,11 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import React from "react";
+import { Text, View } from "react-native";
+import ArtisanRegisteration from "../../components/pages/auth/artisanRegisteration";
 
 export default function ArtisanRegisterScreen() {
   return (
-    <View className="flex-1 bg-black items-center justify-center">
-          <Text className="text-white text-xl font-bold">
-            Welcome to Artisan Register Screen!
-          </Text>
-        </View>
-  )
+    <View className="flex-1">
+      <ArtisanRegisteration />
+    </View>
+  );
 }

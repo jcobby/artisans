@@ -5,9 +5,10 @@ import CustomerTabNavigator from "./CustomerTabNavigator";
 
 /* Customer screens (non-tab) */
 import SearchArtisanScreen from "../screens/customer/SearchArtisanScreen";
-import ArtisanProfileScreen from "../screens/customer/CustomerArtisanProfileScreen";
 import RequestServiceScreen from "../screens/customer/RequestServiceScreen";
 import BookingStatusScreen from "../screens/customer/BookingStatusScreen";
+import SearchResultsScreen from "../screens/global/SearchResultsScreen";
+import CompleteProfileScreen from "../screens/artisan/CompleteProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,31 +16,18 @@ export default function CustomerStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {/* Bottom tabs */}
-      <Stack.Screen
-        name="CustomerTabs"
-        component={CustomerTabNavigator}
-      />
+      <Stack.Screen name="CustomerTabs" component={CustomerTabNavigator} />
 
-      {/* Detail / Flow screens */}
-      <Stack.Screen
-        name="SearchArtisan"
-        component={SearchArtisanScreen}
-      />
+      {/* Search flow */}
+      <Stack.Screen name="SearchArtisan" component={SearchArtisanScreen} />
+      <Stack.Screen name="SearchResults" component={SearchResultsScreen} />
 
-      <Stack.Screen
-        name="ArtisanProfile"
-        component={ArtisanProfileScreen}
-      />
+      {/* Artisan profile detail (reusing the polished profile screen) */}
+      <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
 
-      <Stack.Screen
-        name="RequestService"
-        component={RequestServiceScreen}
-      />
-
-      <Stack.Screen
-        name="BookingStatus"
-        component={BookingStatusScreen}
-      />
+      {/* Booking flow */}
+      <Stack.Screen name="RequestService" component={RequestServiceScreen} />
+      <Stack.Screen name="BookingStatus" component={BookingStatusScreen} />
     </Stack.Navigator>
   );
 }
